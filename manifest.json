@@ -1,6 +1,6 @@
 {
-  "name": "Mantiq - Logic Visualizer",
-  "short_name": "Mantiq",
+  "name": "mantiq - Logic Visualizer",
+  "short_name": "mantiq",
   "start_url": "index.html", 
   "display": "fullscreen",
   "orientation": "landscape",
