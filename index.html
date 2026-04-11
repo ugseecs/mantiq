@@ -58,7 +58,8 @@
     </style>
   </head>
   <body>
-    
+    <div id="first-tap-shield" style="position: absolute; top: 0; left: 0; width: 100vw; height: 100dvh; z-index: 999; cursor: pointer;"></div>
+
     <div id="loading-overlay">
         <div class="spinner"></div>
         <h1 class="loading-title">Mantiq</h1>
@@ -74,28 +75,27 @@
     <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
     
     <script type='text/javascript'>
-      // THE "FIRST TAP" FORCED LOCK
-      // Browsers require a user gesture to lock orientation. We attach this to the first tap on the canvas.
-      function forceLandscapeOnFirstTap() {
+      // 2. THE SHIELD LOGIC
+      function shatterShield() {
           let elem = document.documentElement;
           
-          // 1. Request Fullscreen (Hides URL bar)
+          // Request Fullscreen
           if (elem.requestFullscreen) elem.requestFullscreen().catch(e => {});
           else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
           
-          // 2. Force Hardware Landscape Lock
+          // Force Landscape Lock
           if (screen.orientation && screen.orientation.lock) {
               screen.orientation.lock("landscape").catch(e => {});
           }
 
-          // 3. Remove this listener so it only happens once
-          document.removeEventListener('touchstart', forceLandscapeOnFirstTap);
-          document.removeEventListener('click', forceLandscapeOnFirstTap);
+          // Destroy the shield so Raylib gets all future clicks
+          document.getElementById('first-tap-shield').remove();
       }
 
-      // Listen for the absolute first interaction
-      document.addEventListener('touchstart', forceLandscapeOnFirstTap, { once: true });
-      document.addEventListener('click', forceLandscapeOnFirstTap, { once: true });
+      // Attach the trigger specifically to the shield, not the document
+      var shield = document.getElementById('first-tap-shield');
+      shield.addEventListener('touchstart', shatterShield, { once: true });
+      shield.addEventListener('click', shatterShield, { once: true });
 
       var Module = {
         preRun: [],
@@ -126,4 +126,3 @@
     </script>
     <script async src="index.js"></script>
   </body>
-</html>
