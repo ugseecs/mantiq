@@ -50,10 +50,24 @@
         @keyframes tilt { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-90deg); } }
 
         /* STRICT PORTRAIT LOCK */
-        /* If the device is held vertically, force the warning and completely hide the Raylib canvas */
         @media screen and (orientation: portrait) {
             #portrait-warning { display: flex !important; }
             canvas.emscripten { display: none !important; } 
+        }
+
+        /* PWA Popup Styling */
+        #pwa-popup {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; background-color: #1e293b;
+            border: 1px solid #334155; border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1000;
+            padding: 16px; text-align: center;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { bottom: -100px; opacity: 0; }
+            to { bottom: 20px; opacity: 1; }
         }
     </style>
   </head>
@@ -72,31 +86,88 @@
         <p style="color: #94a3b8;">Mantiq is strictly designed for landscape mode.</p>
     </div>
 
+    <div id="pwa-popup" style="display: none;">
+        <div class="pwa-content">
+            <h3 style="margin: 0 0 8px 0; color: white;">Install Mantiq</h3>
+            <p id="pwa-text" style="margin: 0; color: #94a3b8; font-size: 14px;">Add Mantiq to your home screen for the full, fullscreen native experience.</p>
+            
+            <button id="pwa-install-btn" style="display: none; margin-top: 12px; width: 100%; padding: 10px; background-color: #9400d3; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Install App</button>
+            
+            <div id="pwa-ios-instructions" style="display: none; margin-top: 12px; color: white; font-size: 13px; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px;">
+                Tap the <b>Share</b> icon <span style="font-size: 16px;">⍗</span> below, then select<br><b>"Add to Home Screen"</b> <span style="font-size: 16px;">⊞</span>.
+            </div>
+            
+            <button id="pwa-close-btn" style="margin-top: 12px; background: none; border: none; color: #64748b; font-size: 12px; cursor: pointer; text-decoration: underline;">Not now</button>
+        </div>
+    </div>
+
     <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
     
     <script type='text/javascript'>
-      // 2. THE SHIELD LOGIC
+      // --- SHIELD LOGIC ---
       function shatterShield() {
           let elem = document.documentElement;
-          
-          // Request Fullscreen
           if (elem.requestFullscreen) elem.requestFullscreen().catch(e => {});
           else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
           
-          // Force Landscape Lock
           if (screen.orientation && screen.orientation.lock) {
               screen.orientation.lock("landscape").catch(e => {});
           }
-
-          // Destroy the shield so Raylib gets all future clicks
           document.getElementById('first-tap-shield').remove();
       }
 
-      // Attach the trigger specifically to the shield, not the document
       var shield = document.getElementById('first-tap-shield');
-      shield.addEventListener('touchstart', shatterShield, { once: true });
-      shield.addEventListener('click', shatterShield, { once: true });
+      if (shield) {
+          shield.addEventListener('touchstart', shatterShield, { once: true });
+          shield.addEventListener('click', shatterShield, { once: true });
+      }
 
+      // --- PWA INSTALL LOGIC ---
+      let deferredPrompt;
+      const pwaPopup = document.getElementById('pwa-popup');
+      const installBtn = document.getElementById('pwa-install-btn');
+      const iosInstructions = document.getElementById('pwa-ios-instructions');
+      const closeBtn = document.getElementById('pwa-close-btn');
+
+      const isIos = () => {
+          const userAgent = window.navigator.userAgent.toLowerCase();
+          return /iphone|ipad|ipod/.test(userAgent);
+      };
+
+      const isRunningStandalone = () => {
+          return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true);
+      };
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          deferredPrompt = e;
+          if (!isRunningStandalone()) {
+              pwaPopup.style.display = 'block';
+              installBtn.style.display = 'block';
+          }
+      });
+
+      installBtn.addEventListener('click', async () => {
+          pwaPopup.style.display = 'none';
+          if (deferredPrompt) {
+              deferredPrompt.prompt();
+              const { outcome } = await deferredPrompt.userChoice;
+              deferredPrompt = null;
+          }
+      });
+
+      window.addEventListener('load', () => {
+          if (isIos() && !isRunningStandalone()) {
+              pwaPopup.style.display = 'block';
+              iosInstructions.style.display = 'block';
+          }
+      });
+
+      closeBtn.addEventListener('click', () => {
+          pwaPopup.style.display = 'none';
+      });
+
+      // --- EMSCRIPTEN MODULE ---
       var Module = {
         preRun: [],
         postRun: [
@@ -126,3 +197,4 @@
     </script>
     <script async src="index.js"></script>
   </body>
+</html>
