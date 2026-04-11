@@ -2,10 +2,10 @@
   "name": "Mantiq - Logic Visualizer",
   "short_name": "Mantiq",
   "start_url": "index.html", 
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "landscape",
   "background_color": "#FAFAFA",
-  "theme_color": "#C8DCE6",
+  "theme_color": "#FAFAFA",
   "icons": [
     {
       "src": "icon-192.png",
