@@ -9,7 +9,7 @@
     <style>
         /* Base Reset */
         body { 
-            margin: 0; padding: 0; background-color: #0f172a; 
+            margin: 0; padding: 0; background-color: #FAFAFA; 
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             width: 100vw; height: 100dvh; overflow: hidden; 
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -17,32 +17,32 @@
         }
 
         canvas.emscripten { 
-            display: block; border: 0; background: #000; 
+            display: block; border: 0; background: #FAFAFA; 
             outline: none; width: 100vw; height: 100dvh; 
         }
 
         #loading-overlay { 
             position: absolute; top: 0; left: 0; width: 100vw; height: 100dvh;
-            background-color: #0f172a; display: flex; flex-direction: column; 
+            background-color: #FAFAFA; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; z-index: 100; 
             transition: opacity 0.6s ease-out, visibility 0.6s;
         }
 
         .spinner {
-            width: 48px; height: 48px; border: 4px solid rgba(255,255,255,0.1);
-            border-left-color: #9400d3; border-radius: 50%;
+            width: 48px; height: 48px; border: 4px solid rgba(0,0,0,0.05);
+            border-left-color: #C8DCE6; border-radius: 50%;
             animation: spin 1s linear infinite; margin-bottom: 24px;
         }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .loading-title { color: #f8fafc; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; margin: 0; }
-        .loading-subtitle { color: #94a3b8; font-size: 14px; margin-top: 8px; }
+        .loading-title { color: #1e293b; font-size: 24px; font-weight: 600; letter-spacing: 0.5px; margin: 0; }
+        .loading-subtitle { color: #64748b; font-size: 14px; margin-top: 8px; }
 
         #portrait-warning {
             display: none; position: absolute; top: 0; left: 0; width: 100vw; height: 100dvh;
-            background-color: rgba(15, 23, 42, 0.98); backdrop-filter: blur(5px);
-            z-index: 200; color: white; flex-direction: column; 
+            background-color: rgba(250, 250, 250, 0.98); backdrop-filter: blur(5px);
+            z-index: 200; color: #1e293b; flex-direction: column; 
             justify-content: center; align-items: center; text-align: center;
         }
 
@@ -58,9 +58,9 @@
         /* PWA Popup Styling */
         #pwa-popup {
             position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; background-color: #1e293b;
-            border: 1px solid #334155; border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1000;
+            width: 90%; max-width: 400px; background-color: #FAFAFA;
+            border: 1px solid #C8DCE6; border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1000;
             padding: 16px; text-align: center;
             animation: slideUp 0.5s ease-out;
         }
@@ -83,17 +83,17 @@
     <div id="portrait-warning">
         <div class="rotate-icon">📱</div>
         <h2>Please Rotate Your Device</h2>
-        <p style="color: #94a3b8;">Mantiq is strictly designed for landscape mode.</p>
+        <p style="color: #64748b;">Mantiq is strictly designed for landscape mode.</p>
     </div>
 
     <div id="pwa-popup" style="display: none;">
         <div class="pwa-content">
-            <h3 style="margin: 0 0 8px 0; color: white;">Install Mantiq</h3>
-            <p id="pwa-text" style="margin: 0; color: #94a3b8; font-size: 14px;">Add Mantiq to your home screen for the full, fullscreen native experience.</p>
+            <h3 style="margin: 0 0 8px 0; color: #1e293b;">Install Mantiq</h3>
+            <p id="pwa-text" style="margin: 0; color: #64748b; font-size: 14px;">Add Mantiq to your home screen for the full, fullscreen native experience.</p>
             
-            <button id="pwa-install-btn" style="display: none; margin-top: 12px; width: 100%; padding: 10px; background-color: #9400d3; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Install App</button>
+            <button id="pwa-install-btn" style="display: none; margin-top: 12px; width: 100%; padding: 10px; background-color: #C8DCE6; color: #1e293b; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Install App</button>
             
-            <div id="pwa-ios-instructions" style="display: none; margin-top: 12px; color: white; font-size: 13px; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px;">
+            <div id="pwa-ios-instructions" style="display: none; margin-top: 12px; color: #1e293b; font-size: 13px; background: #C8DCE6; padding: 10px; border-radius: 6px;">
                 Tap the <b>Share</b> icon <span style="font-size: 16px;">⍗</span> below, then select<br><b>"Add to Home Screen"</b> <span style="font-size: 16px;">⊞</span>.
             </div>
             
