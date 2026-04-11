@@ -1,15 +1,20 @@
 {
   "name": "Mantiq - Logic Visualizer",
   "short_name": "Mantiq",
-  "start_url": "mantiq_web.html",
+  "start_url": "index.html", 
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#000000",
-  "theme_color": "#4050A0",
+  "orientation": "landscape",
+  "background_color": "#0f172a",
+  "theme_color": "#9400d3",
   "icons": [
     {
-      "src": "data/icons/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
