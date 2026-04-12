@@ -72,7 +72,6 @@
     </style>
   </head>
   <body>
-    <div id="first-tap-shield" style="position: absolute; top: 0; left: 0; width: 100vw; height: 100dvh; z-index: 999; cursor: pointer;"></div>
 
     <div id="loading-overlay">
         <div class="spinner"></div>
@@ -104,24 +103,6 @@
     <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
     
     <script type='text/javascript'>
-      // --- SHIELD LOGIC ---
-      function shatterShield() {
-          let elem = document.documentElement;
-          if (elem.requestFullscreen) elem.requestFullscreen().catch(e => {});
-          else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-          
-          if (screen.orientation && screen.orientation.lock) {
-              screen.orientation.lock("landscape").catch(e => {});
-          }
-          document.getElementById('first-tap-shield').remove();
-      }
-
-      var shield = document.getElementById('first-tap-shield');
-      if (shield) {
-          shield.addEventListener('touchstart', shatterShield, { once: true });
-          shield.addEventListener('click', shatterShield, { once: true });
-      }
-
       // --- PWA INSTALL LOGIC ---
       let deferredPrompt;
       const pwaPopup = document.getElementById('pwa-popup');
@@ -196,18 +177,18 @@
       };
     </script>
     <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(registration => {
-          console.log('ServiceWorker registered successfully!');
-        })
-        .catch(error => {
-          console.log('ServiceWorker registration failed: ', error);
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(registration => {
+              console.log('ServiceWorker registered successfully!');
+            })
+            .catch(error => {
+              console.log('ServiceWorker registration failed: ', error);
+            });
         });
-    });
-  }
-</script>
+      }
+    </script>
     <script async src="index.js"></script>
   </body>
 </html>
