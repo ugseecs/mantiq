@@ -3,15 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>This page has moved</title>
+<title>mantiq has moved</title>
 <style>
+  @font-face {
+    font-family: 'JetBrains Mono';
+    src: local('JetBrains Mono');
+  }
   :root {
-    --bg: #0f1115;
-    --card: #ffffff;
-    --text: #1a1a1a;
-    --muted: #6b6b6b;
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
+    --bg: #0d1117;
+    --term: #161b22;
+    --border: #30363d;
+    --border-soft: #21262d;
+    --text: #c9d1d9;
+    --muted: #6e7681;
+    --green: #3fb950;
+    --blue: #58a6ff;
+    --blue-dim: #1f6feb;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -22,85 +29,191 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at 30% 20%, #1c2230, #0f1115 70%);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    background: var(--bg);
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 28px 28px;
+    font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
     color: var(--text);
+    padding: 20px;
   }
-  .card {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 48px 40px;
-    max-width: 420px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-    animation: rise 0.5s ease-out;
+  .window {
+    width: 100%;
+    max-width: 560px;
+    background: var(--term);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
   }
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .icon {
-    width: 56px;
-    height: 56px;
-    margin: 0 auto 20px;
-    border-radius: 50%;
-    background: #eef2ff;
+  .titlebar {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #0d1117;
+    border-bottom: 1px solid var(--border);
   }
-  .icon svg { width: 26px; height: 26px; stroke: var(--accent); }
-  h1 {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0 0 8px;
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
   }
-  p {
-    font-size: 14px;
+  .dot.r { background: #ff5f56; }
+  .dot.y { background: #ffbd2e; }
+  .dot.g { background: #27c93f; }
+  .titlebar span {
+    margin-left: 8px;
+    font-size: 12px;
     color: var(--muted);
-    margin: 0 0 28px;
-    line-height: 1.5;
+  }
+  .body {
+    padding: 22px 22px 26px;
+    font-size: 13.5px;
+    line-height: 1.85;
+    min-height: 190px;
+  }
+  .line { white-space: pre-wrap; word-break: break-all; }
+  .prompt { color: var(--green); }
+  .path { color: var(--blue); }
+  .cmd { color: var(--text); }
+  .comment { color: var(--muted); }
+  .out { color: var(--muted); }
+  .arrow { color: var(--green); }
+  .cursor {
+    display: inline-block;
+    width: 7px;
+    height: 14px;
+    background: var(--text);
+    margin-left: 2px;
+    vertical-align: -2px;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+  .link-row {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+  }
+  .link-row.show {
+    opacity: 1;
+    transition: opacity 0.4s ease;
+  }
+  a.target {
+    color: var(--blue);
+    text-decoration: none;
+    border-bottom: 1px solid var(--blue-dim);
+  }
+  a.target:hover { color: #79c0ff; }
+  .actions {
+    margin-top: 22px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    opacity: 0;
+  }
+  .actions.show {
+    opacity: 1;
+    transition: opacity 0.4s ease 0.1s;
   }
   a.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--accent);
-    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: #0d1117;
+    background: var(--green);
     text-decoration: none;
-    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 6px;
     font-weight: 600;
-    padding: 12px 22px;
-    border-radius: 10px;
-    transition: background 0.15s ease, transform 0.15s ease;
   }
-  a.btn:hover {
-    background: var(--accent-hover);
-    transform: translateY(-1px);
+  a.btn:hover { background: #56d364; }
+  .meta {
+    margin-top: 10px;
+    font-size: 11.5px;
+    color: var(--muted);
   }
-  .url {
-    margin-top: 18px;
-    font-size: 12px;
-    color: #b6b6b6;
-    word-break: break-all;
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; }
+    .link-row, .actions { opacity: 1; }
   }
 </style>
 </head>
 <body>
-  <div class="card">
-    <div class="icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M5 12h14M13 5l7 7-7 7"/>
-      </svg>
+  <div class="window">
+    <div class="titlebar">
+      <div class="dot r"></div>
+      <div class="dot y"></div>
+      <div class="dot g"></div>
+      <span>relocate.sh</span>
     </div>
-    <h1>This page has moved</h1>
-    <p>This project now lives at a new address. Click below to go there — you'll be redirected automatically in a few seconds.</p>
-    <a class="btn" id="goBtn" href="https://usamagulzar.github.io/mantiq">Take me there →</a>
-    <div class="url">https://usamagulzar.github.io/mantiq</div>
+    <div class="body" id="termBody">
+      <div class="line"><span class="prompt">ugseecs@github</span><span class="cmd"> ~ % </span><span id="typed"></span><span class="cursor" id="cursor"></span></div>
+      <div id="afterLines"></div>
+      <div class="link-row" id="linkRow">
+        <span class="arrow">→</span>
+        <a class="target" id="targetLink" href="https://usamagulzar.github.io/mantiq">usamagulzar.github.io/mantiq</a>
+      </div>
+      <div class="actions" id="actions">
+        <a class="btn" id="goBtn" href="https://usamagulzar.github.io/mantiq">take me there</a>
+      </div>
+      <div class="meta" id="meta">redirecting automatically in 5s…</div>
+    </div>
   </div>
-  <script>
-    setTimeout(() => { window.location.href = "https://usamagulzar.github.io/mantiq"; }, 4000);
-  </script>
+
+<script>
+  const targetUrl = "https://usamagulzar.github.io/mantiq";
+  const command = "mv mantiq new-address";
+  const typedEl = document.getElementById('typed');
+  const cursorEl = document.getElementById('cursor');
+  const afterLines = document.getElementById('afterLines');
+  const linkRow = document.getElementById('linkRow');
+  const actions = document.getElementById('actions');
+  const meta = document.getElementById('meta');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function finish() {
+    typedEl.textContent = command;
+    afterLines.innerHTML =
+      '<div class="line comment"># we\'re sorry — mantiq has moved</div>' +
+      '<div class="line out">it\'s now accessible at the link below</div>';
+    linkRow.classList.add('show');
+    actions.classList.add('show');
+    startCountdown();
+  }
+
+  function startCountdown() {
+    let remaining = 5;
+    meta.textContent = `redirecting automatically in ${remaining}s…`;
+    const timer = setInterval(() => {
+      remaining -= 1;
+      if (remaining <= 0) {
+        clearInterval(timer);
+        meta.textContent = 'redirecting…';
+        window.location.href = targetUrl;
+      } else {
+        meta.textContent = `redirecting automatically in ${remaining}s…`;
+      }
+    }, 1000);
+  }
+
+  if (reduceMotion) {
+    finish();
+  } else {
+    let i = 0;
+    const type = setInterval(() => {
+      typedEl.textContent = command.slice(0, i);
+      i += 1;
+      if (i > command.length) {
+        clearInterval(type);
+        setTimeout(finish, 350);
+      }
+    }, 45);
+  }
+</script>
 </body>
 </html>
